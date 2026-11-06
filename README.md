@@ -63,7 +63,7 @@ The sidebar handle's markup is in `src/composables/useSidebarResize.ts`.
 Source, not a build: the entry points are `.ts`, `.vue` and `.scss`, which
 each app's Vite compiles with the rest of its code. `vue`, `@nextcloud/vue`
 and `@lucide/vue` are peer dependencies, so there is one copy of each on the
-page.
+page: any `@nextcloud/vue` 9 from 9.11 on, as the apps move up at their own pace.
 
 - While it is local: `"@doconext/nc-ui": "file:../doconext-nc-ui"` in the
   app's `package.json`, and in its Vite config
