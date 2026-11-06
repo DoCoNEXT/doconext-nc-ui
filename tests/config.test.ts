@@ -74,3 +74,14 @@ describe('configure', () => {
     expect(timeAgain.useNavigationRail().railed.value).toBe(true)
   })
 })
+
+describe('translate', () => {
+  beforeEach(() => vi.resetModules())
+
+  it('says its own words in English until the app hands over its t', async () => {
+    const config = await import('../src/config')
+    expect(config.translate('Loading…')).toBe('Loading…')
+    config.configure({ appId: 'doconext_time', t: (text) => (text === 'Loading…' ? 'Laden…' : text) })
+    expect(config.translate('Loading…')).toBe('Laden…')
+  })
+})

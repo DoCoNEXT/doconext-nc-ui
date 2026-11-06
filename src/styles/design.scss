@@ -41,6 +41,21 @@ body {
 	--dcn-shadow-64: 0 0 8px rgb(0 0 0 / 24%), 0 32px 64px rgb(0 0 0 / 28%);
 }
 
+// Every busy indicator in the app, in the instance's accent colour.
+// NcLoadingIcon paints its two arcs with `fill="var(--color-loading-light)"`
+// and `--color-loading-dark`, Nextcloud's theming variables (grey by default),
+// so redefining them on an ancestor is all it takes: the lighter arc is the
+// track, the darker the part that reads as moving. `--color-primary-element`
+// is the accent Nextcloud keeps contrast-safe whatever the user picked.
+// Scoped to `.dcn-app` (put it on every mount point: the app's NcContent and
+// its settings roots) and to a dialog on a page that holds one, since NcModal
+// teleports to <body>; another app's spinners on the same page stay its own.
+.dcn-app,
+body:has(.dcn-app) > .modal-mask {
+	--color-loading-light: var(--color-border);
+	--color-loading-dark: var(--color-primary-element);
+}
+
 .dcn-app .app-content.app-content {
 	background-color: var(--dcn-canvas);
 }

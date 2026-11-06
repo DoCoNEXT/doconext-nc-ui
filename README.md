@@ -17,11 +17,15 @@ preferences.
 // main.ts, once
 import '@doconext/nc-ui/styles'
 import { configure } from '@doconext/nc-ui'
-configure({ appId: APP_ID })
+configure({ appId: APP_ID, t })
 ```
 
-Put `class="dcn-app"` on the app's `NcContent`: the canvas colour and the page
-entrance key off it. In the shell component's scoped style, for the
+`t` is the app's translate function: the package says a few words itself
+("Loading…") and has no catalogue of its own, so those keys go in the app's.
+
+Put `class="dcn-app"` on the app's `NcContent`, and on the root of each other
+mount point (its admin and personal settings): the canvas colour, the page
+entrance and the accent-coloured spinners key off it. In the shell component's scoped style, for the
 navigation rail:
 
 ```scss
@@ -51,6 +55,7 @@ own border and shadow.
 | `DcnSegmented` | One of several views or filters; `tabs` for a tablist; options may carry a `count` |
 | `DcnStat` | A figure with its caption above it |
 | `DcnDialog` | `NcDialog` in the layered arrangement; takes all its props and slots |
+| `DcnLoading` | Spinner and a line of text where content will appear (`role="status"`); `label`, `compact`. A busy button keeps a bare `NcLoadingIcon` |
 | `DcnNavigationRailToggle` | Collapses the navigation to icons; labels are the app's translations |
 
 `useNavigationRail()` and `useSidebarResize()` remember their state in this
