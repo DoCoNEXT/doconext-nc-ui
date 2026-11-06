@@ -1,0 +1,47 @@
+{
+  "name": "@doconext/nc-ui",
+  "version": "0.1.0",
+  "description": "The DoCoNEXT Nextcloud apps' shared look and layout: Fluent 2's layered style on top of Nextcloud's own Vue components.",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles": "./src/styles/index.scss",
+    "./navigation-rail.css": "./src/styles/navigation-rail.css"
+  },
+  "files": [
+    "src",
+    "LICENSES",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "lint": "eslint src tests",
+    "stylelint": "stylelint \"src/**/*.vue\" \"src/**/*.scss\" \"src/**/*.css\"",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@lucide/vue": "^1.48.0",
+    "@nextcloud/vue": "~9.11.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@lucide/vue": "^1.48.0",
+    "@nextcloud/eslint-config": "^9.0.1",
+    "@nextcloud/stylelint-config": "^3.2.2",
+    "@nextcloud/vue": "~9.11.0",
+    "@vue/tsconfig": "^0.8.1",
+    "eslint": "^10.9.1",
+    "sass": "^1.104.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.6",
+    "vue": "^3.5.42",
+    "vue-tsc": "^3.1.8"
+  },
+  "engines": {
+    "node": "^24",
+    "npm": ">=11"
+  }
+}

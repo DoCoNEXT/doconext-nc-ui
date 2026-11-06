@@ -1,0 +1,8 @@
+{
+	"extends": "@vue/tsconfig",
+	"include": ["./src/**/*.ts", "./src/**/*.vue", "./tests/**/*.ts"],
+	"compilerOptions": {
+		"erasableSyntaxOnly": true,
+		"noEmit": true
+	}
+}

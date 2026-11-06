@@ -1,0 +1,16 @@
+version = 1
+SPDX-PackageName = "doconext-nc-ui"
+SPDX-PackageSupplier = "DoCoNEXT <support@doconext.com>"
+SPDX-PackageDownloadLocation = "https://github.com/DoCoNEXT/doconext-nc-ui"
+
+[[annotations]]
+path = ["src/**", "tests/**", "README.md", "CHANGELOG.md", "eslint.config.mjs", "stylelint.config.cjs", "vitest.config.ts"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 DoCoNEXT"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["REUSE.toml", "package.json", "package-lock.json", "tsconfig.json", ".gitignore", ".nvmrc"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "none"
+SPDX-License-Identifier = "CC0-1.0"

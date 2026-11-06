@@ -1,0 +1,7 @@
+// The global half of @doconext/nc-ui: the look (cards, tables, badges,
+// segmented choices, stats, dialogs) and the resizable details panel. Import it
+// once, from an app's entry point: import '@doconext/nc-ui/styles'.
+// The navigation rail's rules are not in here: they must sit in the shell
+// component's scoped block, see navigation-rail.css.
+@use 'design.scss';
+@use 'sidebar-resize.scss';

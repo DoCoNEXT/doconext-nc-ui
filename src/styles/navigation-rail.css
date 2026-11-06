@@ -1,0 +1,235 @@
+/*
+ * The rail's looks. See composables/useNavigationRail.ts for why the
+ * navigation is never actually "closed" — everything here styles an OPEN
+ * navigation that has been made narrow, which is why none of it needs
+ * !important.
+ *
+ * Meant to be @import'd from App.vue's own <style scoped> block, and ONLY
+ * from there — not from components/NavigationRailToggle.vue, even though that
+ * is where the toggle button itself lives. Reason, found the hard way:
+ *
+ * A `:deep()` rule compiles to a leading `[data-v-xxx] ancestor descendant`
+ * selector, where `data-v-xxx` is the scope id of whichever component the
+ * rule is written in. That id has to actually appear on some element ABOVE
+ * `.app-navigation` in the real DOM, or the rule matches nothing. App.vue's
+ * id does: it renders NcContent directly, and Vue's "a single-root child's
+ * root also carries its caller's scope id" rule chains that id all the way
+ * down through AppNavigation.vue (which has no <style> of its own, so it
+ * contributes nothing but does not break the chain either) onto
+ * NcAppNavigation's own root. NavigationRailToggle's id does NOT: that
+ * component is invoked as slot content *inside* AppNavigation.vue's template,
+ * not as AppNavigation.vue's own single root, so its scope id lands only on
+ * the button itself — never on anything above `.app-navigation` — and a rule
+ * written in its scope can never match. Verified against a real render
+ * (position stayed "relative", not "absolute") before this file's rules were
+ * moved here from that component.
+ *
+ * The lesson generalises: a rule that needs to reach across from an ancestor
+ * to a slot-content descendant belongs in whichever component is actually
+ * *above* both of them in the render tree — here, that is always App.vue,
+ * however many navigation components an app happens to have — not in the
+ * descendant's own component, even when that component looks like the more
+ * "obviously correct" place to keep its own positioning.
+ *
+ * Ported from doconext_core's src/styles/navigation-rail.css (as is
+ * doconext_crm's), unchanged but for this line; Core took it from
+ * doconext_finder.
+ */
+
+/* Above the breakpoint the rail toggle replaces the library's own, which
+   hides the navigation outright. Two controls that both look like "collapse"
+   but do different things is worse than either. Mirrors MOBILE_BREAKPOINT
+   from @nextcloud/vue: below it the navigation is an overlay over the
+   content, where a permanent rail would be in the way — there it keeps its
+   own toggle and its normal open/closed behaviour. */
+@media only screen and (min-width: 1024px) {
+  :deep(.app-navigation-toggle-wrapper) {
+    display: none;
+  }
+}
+
+/* The width change is the whole animation; the library only transitions the
+   transform and margin it uses to slide the sidebar out of view. */
+:deep(.app-navigation) {
+  transition:
+    width var(--animation-quick),
+    transform var(--animation-quick),
+    margin var(--animation-quick);
+}
+
+/*
+ * The toggle sits in the navigation's own header row (NcAppNavigation's
+ * `search` slot), in normal flow — not floating over the content the way
+ * Nextcloud's own toggle does.
+ *
+ * That is the whole point of putting it there: a control that overhangs the
+ * content forces every page to reserve a clickable area of empty space at the
+ * top forever, so that the first row of anything is not sitting underneath it.
+ * Sixty pixels off the top of every screen, permanently, for a button most
+ * people press twice a day. In the navigation it costs nothing the navigation
+ * did not already have room for, and the content starts at the top again.
+ *
+ * Aligned to the inline-end so it keeps the horizontal position it had while
+ * it overhung — the navigation's far edge — which is also where every desktop
+ * app that collapses a drawer puts the control. Railed, the entry is exactly
+ * one button wide, so "at the end" and "centred" are the same place, and it
+ * lands on the same column as the icons below it.
+ *
+ * The wrapper is a flex row rather than the button being pushed with a margin,
+ * so that an empty slot (mobile, where no rail toggle renders) collapses to
+ * nothing instead of leaving its padding behind. An app with something of its
+ * own up there — a workspace switcher, say — puts it in the same slot and gets
+ * a header row; one without gets a row holding only the toggle, which is the
+ * same thing minus a neighbour.
+ */
+/* Spacing matches the list below rather than being invented here: the same
+   inline padding, the same 4px between neighbours, and no bottom padding —
+   the list's own top padding is what separates the header from it, one step
+   up from the rhythm inside each group rather than the sum of both paddings.
+   Empty (mobile, where no rail toggle renders) it keeps no padding at all. */
+:deep(.app-navigation__search) {
+  display: flex;
+  align-items: center;
+
+  /* flex-start, not flex-end: an app that puts something of its own in this row
+     lets that grow (see below), which lands the toggle at the far edge anyway.
+     An app with nothing there gets a toggle in line with the icons under it,
+     rather than one stranded across an empty row. */
+  justify-content: flex-start;
+  gap: var(--default-grid-baseline, 4px);
+  padding: var(--app-navigation-padding) var(--app-navigation-padding) 0;
+  min-width: 0;
+}
+
+:deep(.app-navigation__search:empty) {
+  padding: 0;
+}
+
+/* The list's own top padding would put a step between the header row and the
+   first entry that the entries do not have between themselves. Matched to the
+   gap they do have — and only when there is a header row above it to separate
+   from, so an app without one keeps the library's own inset.
+
+   One :deep() around the whole chain, not one per part: only the first is
+   processed, and a second is left in the output as a literal `:deep(...)`,
+   which is not a selector any browser knows — the rule then matches nothing,
+   silently. */
+:deep(.app-navigation__search:not(:empty) ~ .app-navigation__list) {
+  padding-top: var(--default-grid-baseline, 4px);
+}
+
+/* Whatever the app put up there takes the rest of the row, so its own content
+   stays aligned with the list below rather than being pushed along by the
+   toggle. Not left to the library's own `width: 100%` for a navigation entry:
+   that rule is scoped to the library's own components, and an app's hand-rolled
+   header element carries the class without the scope attribute that rule needs
+   — it sized to its content and drifted inline-end of the list underneath it. */
+:deep(.app-navigation__search) > *:not(.nav-rail-toggle) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/*
+ * Railed there is no room for two things side by side, so the row becomes a
+ * column with the toggle on top — the way the user reaches for it first when
+ * the labels are gone.
+ *
+ * column-reverse rather than reordering the markup: expanded is the state
+ * people spend their time in, and there the reading order (what you are
+ * looking at, then the control that collapses it) matches the markup. In a
+ * rail the two are an icon apiece with no sequence between them worth
+ * preserving.
+ */
+.app--rail :deep(.app-navigation__search) {
+  flex-direction: column-reverse;
+}
+
+/* Qualified with the .app-navigation ancestor rather than written as a bare
+   `.nav-rail-toggle` rule: NcButton's own stylesheet sets properties on
+   `.button-vue` at a specificity this would otherwise only tie, and which of
+   the two rules a build happens to concatenate later would decide the tie —
+   verified against a real render, where the vendor rule won and this one
+   silently did nothing. */
+:deep(.app-navigation) .nav-rail-toggle {
+  margin: 0;
+}
+
+.app--rail :deep(.app-navigation) {
+  width: calc(var(--default-clickable-area) + var(--app-navigation-padding) * 2);
+}
+
+/* Only the icon survives; everything that needs the missing width goes. This
+   also collapses RealmSwitcher's trigger label, since NcAppNavigationItem and
+   NcActions share the same class for it.
+
+   __utils is deliberately NOT in this list: it is also where the counter
+   bubble lives (see below), and display:none on it would take the counter
+   down too — a display:none ancestor removes a subtree from rendering no
+   matter what the child's own CSS says. Found by watching a real entity
+   type's count vanish instead of shrinking to a dot. Nothing else currently
+   renders into __utils in this app; if that changes, hide the new thing
+   specifically rather than reintroducing this rule. */
+.app--rail :deep(.app-navigation-entry__name),
+.app--rail :deep(.app-navigation-caption),
+.app--rail :deep(.app-navigation-entry__children) {
+  display: none;
+}
+
+/* The list reserves a scrollbar gutter unconditionally. At full width that
+   costs nothing; at rail width it takes a third of the entry, and the icon —
+   a fixed square that does not shrink — is pushed inline-start until it sits
+   on the stripe marking the active page. Give the entry its width back rather
+   than nudging the icon to compensate. */
+.app--rail :deep(.app-navigation__body) {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+/* The end padding keeps a label off the edge. With no label it should only
+   eat into the icon's own box; instead the icon centres, since a footer item
+   (Settings, "Leave settings") sits outside .app-navigation__body and does
+   not narrow to content width the way a list item does — its link stays the
+   full rail width, so any left/right imbalance shows.
+
+   The .app-navigation-entry ancestor in this selector is not decoration: the
+   library's own rule for this property is `.app-navigation-entry:not(...)
+   .app-navigation-entry-link[data-v-xxx]`, specificity (0,4,0). Compiled, ours
+   is `.app--rail[data-v-xxx] .app-navigation .app-navigation-entry
+   .app-navigation-entry-link` — (0,5,0), checked with compileStyle() before
+   trusting it, not assumed — a rule qualified to only (0,4,0) here would TIE
+   the library's and lose the same way the toggle's own position once did,
+   decided by which build happens to concatenate its CSS chunk later.
+   justify-content is the more direct fix and would suffice on its own for the
+   *icon*, but the padding still needs overriding too — an asymmetric content
+   box still centres its content off-centre. */
+.app--rail :deep(.app-navigation) .app-navigation-entry .app-navigation-entry-link,
+.app--rail :deep(.app-navigation) .app-navigation-entry .app-navigation-entry-button {
+  padding-inline-end: 0;
+  justify-content: center;
+}
+
+/* __utils carries its own hard `min-width: var(--default-clickable-area)` —
+   44px, room enough for a counter or an actions button sitting beside a label.
+   In a 34px-wide rail entry that leaves negative room for the icon: the link
+   (flex: 1 1 0, free to shrink) gets squeezed to zero width fighting that
+   minimum, and its icon — a fixed, non-shrinking 44px box one level further
+   in — overflows outside the collapsed link instead of being visibly missing,
+   which is why this went unnoticed until the icon happened to move. __utils's
+   own content is about to be repositioned to a small overlay dot below, so
+   the 44px reservation buys it nothing here. */
+.app--rail :deep(.app-navigation-entry__utils) {
+  min-width: 0;
+}
+
+/* A counter has no room beside a hidden label, but the number is often the
+   reason the entry is worth looking at (an entity type's count) — so it rides
+   the icon as a dot instead of disappearing with the label. */
+.app--rail :deep(.app-navigation-entry__counter-wrapper) {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: calc(var(--default-clickable-area) - 18px);
+  margin: 0;
+  pointer-events: none;
+  transform: scale(0.7);
+  transform-origin: top right;
+}
