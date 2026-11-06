@@ -65,7 +65,7 @@ each app's Vite compiles with the rest of its code. `vue`, `@nextcloud/vue`
 and `@lucide/vue` are peer dependencies, so there is one copy of each on the
 page.
 
-- While it is local: `"@doconext/nc-ui": "file:../doconext_nc_ui"` in the
+- While it is local: `"@doconext/nc-ui": "file:../doconext-nc-ui"` in the
   app's `package.json`, and in its Vite config
   `resolve.dedupe: ['vue', '@nextcloud/vue', '@lucide/vue']` — the linked
   folder has a `node_modules` of its own, and without dedupe its components
