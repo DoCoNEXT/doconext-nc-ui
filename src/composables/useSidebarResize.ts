@@ -71,9 +71,12 @@ const KEY_STEP = 16
 
 /** The stored width, or null while the panel has never been dragged. */
 function read(): number | null {
+  // Outside the try: a missing configure() is the app's mistake and must say
+  // so, not pass for blocked storage.
+  const key = storageKey(STORAGE_NAME)
   let raw: string | null
   try {
-    raw = window.localStorage.getItem(storageKey(STORAGE_NAME))
+    raw = window.localStorage.getItem(key)
   } catch {
     // Private windows and blocked site data throw on access; a forgotten
     // layout preference is not worth failing the app over.
@@ -89,11 +92,12 @@ function read(): number | null {
 }
 
 function write(width: number | null) {
+  const key = storageKey(STORAGE_NAME)
   try {
     if (width === null) {
-      window.localStorage.removeItem(storageKey(STORAGE_NAME))
+      window.localStorage.removeItem(key)
     } else {
-      window.localStorage.setItem(storageKey(STORAGE_NAME), String(width))
+      window.localStorage.setItem(key, String(width))
     }
   } catch {
     // ignored on purpose — see above
@@ -119,6 +123,19 @@ const width = ref(0)
 
 const resizing = ref(false)
 
+/**
+ * The widest the panel can be in this window, which is what the separator
+ * reports as its maximum: a fixed 1200 would be read out while End stops at
+ * the window's limit. Updated whenever the panel is painted, which includes
+ * every window resize.
+ */
+const ceiling = ref(MAX_WIDTH)
+
+/** The ceiling never falls below the floor, so a narrow window gives the panel its minimum rather than an impossible range. */
+function currentCeiling(): number {
+  return Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH))
+}
+
 export function useSidebarResize() {
   /**
    * A width the window can actually hold.
@@ -126,14 +143,11 @@ export function useSidebarResize() {
    * Clamped against the viewport as well as against the bounds, so a width
    * chosen while the window was wide gives way when it is made narrow — and
    * comes back when it grows again, because what was stored is never rewritten
-   * to fit. The ceiling never falls below the floor, so a narrow window gives
-   * the panel its minimum rather than an impossible range.
+   * to fit.
    * @param wanted the width being asked for, in pixels
    */
   function allowed(wanted: number): number {
-    const ceiling = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH))
-
-    return Math.round(Math.min(Math.max(wanted, MIN_WIDTH), ceiling))
+    return Math.round(Math.min(Math.max(wanted, MIN_WIDTH), ceiling.value))
   }
 
   /**
@@ -149,6 +163,7 @@ export function useSidebarResize() {
    *   sizing — the stylesheet's opening width, which follows the window
    */
   function paint(wanted: number | null) {
+    ceiling.value = currentCeiling()
     const style = document.documentElement.style
     if (wanted === null) {
       style.removeProperty(WIDTH_PROPERTY)
@@ -269,7 +284,10 @@ export function useSidebarResize() {
     width,
     resizing,
     minWidth: MIN_WIDTH,
-    maxWidth: MAX_WIDTH,
+    /** The widest this window allows, for `aria-valuemax`; reactive, read it in the template. */
+    get maxWidth(): number {
+      return ceiling.value
+    },
     startResize,
     resizeTo,
     endResize,

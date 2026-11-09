@@ -86,6 +86,16 @@ $width: var(--dcn-sidebar-width, var(--dcn-sidebar-width-initial, clamp(300px, 2
     outline: none;
   }
 
+  // Forced colours replace backgrounds, which would take the line, and with it
+  // every sign of focus. Highlight is the user's own focus colour.
+  @media (forced-colors: active) {
+    &:hover::after,
+    &:focus-visible::after,
+    &--active::after {
+      background: Highlight;
+    }
+  }
+
   // Below the breakpoint the panel covers the window, so there is no seam to
   // drag — and a strip of col-resize down the middle of a phone screen is only
   // in the way.

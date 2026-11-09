@@ -1,20 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
+import { fakeStorage } from './storage'
 
-vi.mock('@nextcloud/vue', () => ({ useIsMobile: () => ref(false) }))
-
-/** A browser's localStorage, enough for the composables. */
-function fakeStorage(): Storage {
-  const data = new Map<string, string>()
-  return {
-    get length() { return data.size },
-    clear: () => data.clear(),
-    getItem: (k: string) => data.get(k) ?? null,
-    key: (i: number) => [...data.keys()][i] ?? null,
-    removeItem: (k: string) => { data.delete(k) },
-    setItem: (k: string, v: string) => { data.set(k, v) },
-  }
-}
+// One phone-or-not for the whole file; a test that needs a phone sets it.
+const mobile = vi.hoisted(() => ({ value: false }))
+vi.mock('@nextcloud/vue', () => ({ useIsMobile: () => ref(mobile.value) }))
 
 /** The package's configuration and rail, fresh: each app on the page is its own module instance. */
 async function load() {
@@ -72,6 +62,39 @@ describe('configure', () => {
     const timeAgain = await load()
     timeAgain.configure({ appId: 'doconext_time' })
     expect(timeAgain.useNavigationRail().railed.value).toBe(true)
+  })
+
+  /*
+   * Do:     use the rail without configure().
+   * Expect: the error that says what to call.
+   * Why:    caught along with blocked storage, the mistake passed silently and
+   *         the rail never remembered anything.
+   */
+  it('says so when the rail is used before configure()', async () => {
+    const { useNavigationRail } = await load()
+    expect(() => useNavigationRail()).toThrow(/configure/)
+  })
+
+  /*
+   * Do:     collapse the rail, then read it on a phone.
+   * Expect: not railed, and no rail offered; the choice is still stored.
+   * Why:    there the navigation is an overlay, and a rail would cover the page.
+   */
+  it('keeps out of the way on a phone', async () => {
+    const storage = fakeStorage()
+    storage.setItem('doconext_time-navigation-rail', 'collapsed')
+    vi.stubGlobal('window', { localStorage: storage })
+    mobile.value = true
+    try {
+      const app = await load()
+      app.configure({ appId: 'doconext_time' })
+      const rail = app.useNavigationRail()
+      expect(rail.canRail.value).toBe(false)
+      expect(rail.railed.value).toBe(false)
+      expect(rail.railClass.value).toEqual({ 'app--rail': false })
+    } finally {
+      mobile.value = false
+    }
   })
 })
 

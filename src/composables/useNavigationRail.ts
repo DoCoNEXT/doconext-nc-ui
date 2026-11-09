@@ -39,8 +39,11 @@ export const RAIL_CLASS = 'app--rail'
  * session's localStorage, and each remembers its own rail independently.
  */
 function read(): boolean {
+  // Outside the try: a missing configure() is the app's mistake and must say
+  // so, not pass for blocked storage.
+  const key = storageKey('navigation-rail')
   try {
-    return window.localStorage.getItem(storageKey('navigation-rail')) === 'collapsed'
+    return window.localStorage.getItem(key) === 'collapsed'
   } catch {
     // Private windows and blocked site data throw on access; a forgotten
     // layout preference is not worth failing the app over.
@@ -49,8 +52,9 @@ function read(): boolean {
 }
 
 function write(value: boolean) {
+  const key = storageKey('navigation-rail')
   try {
-    window.localStorage.setItem(storageKey('navigation-rail'), value ? 'collapsed' : 'expanded')
+    window.localStorage.setItem(key, value ? 'collapsed' : 'expanded')
   } catch {
     // ignored on purpose — see above
   }

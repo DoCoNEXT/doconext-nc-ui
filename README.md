@@ -61,7 +61,34 @@ own border and shadow.
 `useNavigationRail()` and `useSidebarResize()` remember their state in this
 browser, keyed by the app id from `configure()`: a layout belongs to the
 screen it was chosen on, and several apps share one session's localStorage.
-The sidebar handle's markup is in `src/composables/useSidebarResize.ts`.
+
+The resizable details panel needs a handle the app renders itself, because
+NcAppSidebar has no slot at its root. Put the handle beside `NcAppSidebar`, as
+its sibling, inside the positioned element that spans the panel from top to
+bottom (`src/styles/sidebar-resize.scss` says why):
+
+```vue
+<div v-if="sidebarOpen"
+     class="dcn-sidebar-grip"
+     :class="{ 'dcn-sidebar-grip--active': resize.resizing.value }"
+     role="separator"
+     aria-orientation="vertical"
+     tabindex="0"
+     :aria-label="t('Resize the sidebar')"
+     :aria-valuenow="resize.width.value"
+     :aria-valuemin="resize.minWidth"
+     :aria-valuemax="resize.maxWidth"
+     @pointerdown="resize.startResize"
+     @pointermove="resize.resizeTo"
+     @pointerup="resize.endResize"
+     @pointercancel="resize.endResize"
+     @keydown="resize.nudge"
+     @dblclick="resize.resetWidth" />
+```
+
+Here `const resize = useSidebarResize()`. Keep `pointercancel`, or a drag the
+browser takes over (a touch scroll, say) never ends. `maxWidth` is the widest
+the current window allows, not a constant.
 
 ## How it is consumed
 

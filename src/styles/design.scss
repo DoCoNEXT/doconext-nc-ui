@@ -22,7 +22,6 @@
 body {
 	--dcn-canvas: color-mix(in srgb, var(--color-main-text) 3%, var(--color-main-background));
 	--dcn-surface: var(--color-main-background);
-	--dcn-chip: var(--color-main-background);
 	--dcn-card-stroke: color-mix(in srgb, var(--color-border) 60%, transparent);
 	--dcn-shadow-2: 0 0 2px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 14%);
 	--dcn-shadow-4: 0 0 2px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 14%);
@@ -34,7 +33,6 @@ body {
 @include dark {
 	--dcn-canvas: var(--color-main-background);
 	--dcn-surface: color-mix(in srgb, var(--color-main-text) 6%, var(--color-main-background));
-	--dcn-chip: color-mix(in srgb, var(--color-main-text) 22%, var(--color-main-background));
 	--dcn-shadow-2: 0 0 2px rgb(0 0 0 / 24%), 0 1px 2px rgb(0 0 0 / 28%);
 	--dcn-shadow-4: 0 0 2px rgb(0 0 0 / 24%), 0 2px 4px rgb(0 0 0 / 28%);
 	--dcn-shadow-64: 0 0 8px rgb(0 0 0 / 24%), 0 32px 64px rgb(0 0 0 / 28%);
@@ -267,7 +265,11 @@ body:has(.dcn-app) > .modal-mask {
 }
 
 // A choice of views or filters built from NcButtons (the selected one is
-// 'primary'): the selection is a raised chip, not a second call to action.
+// 'primary'): the selection is a raised chip in the accent's light tint, not a
+// second call to action. Tint and text are the pair Nextcloud defines for
+// each other (as on the `info` badge), contrast-safe in every theme. A
+// neutral chip with only a shadow to tell it apart from its neighbours was
+// ≈1.2:1 in light and high contrast, and nothing at all in forced colours.
 .dcn-segmented {
 	display: inline-flex;
 	flex-wrap: wrap;
@@ -279,9 +281,17 @@ body:has(.dcn-app) > .modal-mask {
 	&.dcn-segmented .button-vue--primary,
 	&.dcn-segmented .button-vue--primary:hover:not(:disabled) {
 		border-color: transparent;
-		background-color: var(--dcn-chip);
-		color: var(--color-main-text);
+		background-color: var(--color-primary-element-light);
+		color: var(--color-primary-element-light-text);
 		box-shadow: var(--dcn-shadow-2);
+	}
+
+	// Forced colours replace backgrounds and drop shadows, so the selection
+	// needs a mark the user's palette keeps.
+	@media (forced-colors: active) {
+		&.dcn-segmented .button-vue--primary {
+			border: 2px solid Highlight;
+		}
 	}
 }
 
