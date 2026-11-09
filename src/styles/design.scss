@@ -362,7 +362,9 @@ body .dialog__modal.dialog__modal:has(.dcn-dialog) {
 		padding-block-end: 0;
 	}
 
-	.dialog__actions {
+	// NcDialog always renders the footer, also without buttons; only a footer
+	// that has some gets the room and the rule above it.
+	.dialog__actions:not(:empty) {
 		gap: 8px;
 		padding: 12px 24px;
 		border-top: 1px solid var(--color-border);

@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- A `DcnDialog` without buttons has no footer: the padding and the rule
+  above it were drawn on NcDialog's empty footer too.
+
 - `DcnLoading`, from Core's LoadingState: the spinner with a line of text
   for screen readers, centred or `compact`; every spinner inside `.dcn-app`
   turns in the accent colour. `configure()` takes the app's `t` for the
