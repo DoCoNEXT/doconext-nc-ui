@@ -70,17 +70,14 @@ each app's Vite compiles with the rest of its code. `vue`, `@nextcloud/vue`
 and `@lucide/vue` are peer dependencies, so there is one copy of each on the
 page: any `@nextcloud/vue` 9 from 9.11 on, as the apps move up at their own pace.
 
-- While it is local: `"@doconext/nc-ui": "file:../doconext-nc-ui"` in the
-  app's `package.json`, and in its Vite config
-  `resolve.dedupe: ['vue', '@nextcloud/vue', '@lucide/vue']` — the linked
-  folder has a `node_modules` of its own, and without dedupe its components
-  would get a second Vue.
-- From GitHub: `"@doconext/nc-ui": "github:DoCoNEXT/doconext-nc-ui#v0.1.0"`,
-  pinned to a tag. The repository is private, so CI needs a token that may
-  read it.
+An app installs it from GitHub, pinned to a tag, in its `package.json`:
 
-An app takes a new version when it is ready to; a change that breaks one is
-a new minor version while this is 0.x, and says so in CHANGELOG.md.
+```json
+"@doconext/nc-ui": "github:DoCoNEXT/doconext-nc-ui#v0.1.0"
+```
+
+It takes a new version when it is ready to. While this is 0.x, a change that
+breaks an app is a new minor version, and CHANGELOG.md says so.
 
 ## Develop
 
@@ -89,3 +86,18 @@ nvm use
 npm install
 npm run lint && npm run stylelint && npm run typecheck && npm test
 ```
+
+To try a change in an app before it is tagged, check this repository out next
+to the app and point the app at it with
+`"@doconext/nc-ui": "file:../doconext-nc-ui"`. Add
+`resolve.dedupe: ['vue', '@nextcloud/vue', '@lucide/vue']` to the app's Vite
+config as well. The linked folder has a `node_modules` of its own, and without
+dedupe its components would get a second Vue.
+
+## Security, contributing, licence
+
+Report vulnerabilities privately, as [SECURITY.md](SECURITY.md) describes.
+Bug reports and feature requests are welcome as issues. Code contributions
+are not accepted, and [CONTRIBUTING.md](CONTRIBUTING.md) explains why.
+
+AGPL-3.0-or-later ([LICENSE](LICENSE)), © 2026 DoCoNEXT.

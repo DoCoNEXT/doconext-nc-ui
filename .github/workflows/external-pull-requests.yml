@@ -1,0 +1,48 @@
+# This repository does not accept external code contributions (CONTRIBUTING.md,
+# "Why no code"). A pull request left unanswered makes the project look
+# unmaintained, so the policy is enforced rather than only written down.
+#
+# The repository setting does the enforcing (Settings → General → Pull requests:
+# creation allowed by collaborators only), so an outside pull request should
+# never exist. This workflow is the fallback for the day that setting changes.
+# It answers at once, explains why, and closes the pull request.
+name: External pull requests
+
+# pull_request_target, not pull_request: a fork's pull_request run gets a
+# read-only token and could not close anything. Nothing here runs, builds or
+# checks out the pull request's code. The checkout below takes the base branch,
+# and that is what keeps the elevated token safe.
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+# actions/checkout needs contents:read. Without it, the token has no access to
+# any scope not listed here, so the checkout fails and the job never answers.
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  close:
+    name: Explain and close
+    runs-on: ubuntu-latest
+    # Maintainers work through branches on this repository; only someone
+    # without write access has to come from a fork. So "external" is decided by
+    # where the branch lives, not by author_association, which reports an
+    # organisation owner with private membership as CONTRIBUTOR.
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    steps:
+      # Under pull_request_target the default ref is the base branch, never the
+      # fork's head. The checkout is for one file: the reply text, kept outside
+      # this workflow so it can be reworded without touching the automation.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Explain, then close
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr comment "$PR" --body-file .github/external-pr-reply.md
+          gh pr close "$PR"
