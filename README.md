@@ -25,12 +25,45 @@ configure({ appId: APP_ID, t })
 
 Put `class="dcn-app"` on the app's `NcContent`, and on the root of each other
 mount point (its admin and personal settings): the canvas colour, the page
-entrance and the accent-coloured spinners key off it. In the shell component's scoped style, for the
-navigation rail:
+entrance and the accent-coloured spinners key off it.
 
-```scss
+The navigation rail collapses the app navigation to its icons instead of
+hiding it. It takes three things in the shell component, the one that renders
+`NcContent`:
+
+```vue
+<template>
+  <NcContent :app-name="APP_ID" class="dcn-app" :class="railClass">
+    <NcAppNavigation :aria-label="t('Navigation')">
+      <template #search>
+        <DcnNavigationRailToggle :expand-label="t('Expand menu')"
+                                 :collapse-label="t('Collapse menu')" />
+      </template>
+      …
+    </NcAppNavigation>
+    …
+  </NcContent>
+</template>
+
+<script setup lang="ts">
+import { DcnNavigationRailToggle, useNavigationRail } from '@doconext/nc-ui'
+const { railClass } = useNavigationRail()
+</script>
+
+<style scoped>
 @import '@doconext/nc-ui/navigation-rail.css';
+</style>
 ```
+
+- `railClass` on `NcContent` is what makes the navigation narrow. Without it
+  the toggle changes nothing.
+- The toggle belongs in `NcAppNavigation`'s `search` slot, and it takes over
+  from the library's own toggle, which the stylesheet hides.
+- The stylesheet goes in this component's scoped style, not in the toggle's
+  and not globally: `navigation-rail.css` explains why.
+
+On a phone the navigation is an overlay, so there the toggle is not shown and
+the navigation opens and closes as usual.
 
 ```vue
 <DcnPageTitle>{{ t('Invoices') }}</DcnPageTitle>

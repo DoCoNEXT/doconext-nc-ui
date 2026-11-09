@@ -2,8 +2,8 @@
 // it. See composables/useSidebarResize.ts for the behaviour.
 
 // Global on purpose, not scoped: `#app-sidebar-vue` is NcAppSidebar's own root,
-// and the drag writes its property onto <html>. Import it once from the shell
-// component (`@use './styles/sidebar-resize';`) or from an entry point.
+// and the drag writes its property onto <html>. Included in
+// `@doconext/nc-ui/styles`, so an app that imports those has it already.
 
 // **Where the handle goes.** Render `.dcn-sidebar-grip` as a sibling of
 // NcAppSidebar, inside an element that is positioned (`relative`, `absolute` or

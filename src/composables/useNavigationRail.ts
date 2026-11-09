@@ -11,7 +11,7 @@
  * is left permanently open and the collapsing is ours, which is why nothing here
  * has to observe the DOM, undo an ARIA attribute or out-shout a library rule.
  * The library's toggle is hidden by the accompanying stylesheet, and a rail
- * toggle (components/NavigationRailToggle.vue) takes its job.
+ * toggle (components/DcnNavigationRailToggle.vue) takes its job.
  *
  * On mobile the navigation is an overlay rather than a column, and a permanent
  * rail would sit on top of the content — so there it keeps its normal
@@ -21,8 +21,7 @@
  * App.vue's NcContent class and the toggle button always agree on live state.
  *
  * Ported from doconext_core (as is doconext_crm's), which took it from
- * doconext_finder (Nextcloud apps bundle their own JavaScript, so this is
- * copied rather than imported).
+ * doconext_finder.
  */
 import { computed, ref } from 'vue'
 import type { Ref } from 'vue'

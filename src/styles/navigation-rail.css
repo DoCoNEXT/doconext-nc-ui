@@ -5,7 +5,7 @@
  * !important.
  *
  * Meant to be @import'd from App.vue's own <style scoped> block, and ONLY
- * from there — not from components/NavigationRailToggle.vue, even though that
+ * from there — not from components/DcnNavigationRailToggle.vue, even though that
  * is where the toggle button itself lives. Reason, found the hard way:
  *
  * A `:deep()` rule compiles to a leading `[data-v-xxx] ancestor descendant`
@@ -16,7 +16,7 @@
  * root also carries its caller's scope id" rule chains that id all the way
  * down through AppNavigation.vue (which has no <style> of its own, so it
  * contributes nothing but does not break the chain either) onto
- * NcAppNavigation's own root. NavigationRailToggle's id does NOT: that
+ * NcAppNavigation's own root. DcnNavigationRailToggle's id does NOT: that
  * component is invoked as slot content *inside* AppNavigation.vue's template,
  * not as AppNavigation.vue's own single root, so its scope id lands only on
  * the button itself — never on anything above `.app-navigation` — and a rule
@@ -32,8 +32,7 @@
  * "obviously correct" place to keep its own positioning.
  *
  * Ported from doconext_core's src/styles/navigation-rail.css (as is
- * doconext_crm's), unchanged but for this line; Core took it from
- * doconext_finder.
+ * doconext_crm's); Core took it from doconext_finder.
  */
 
 /* Above the breakpoint the rail toggle replaces the library's own, which

@@ -3,6 +3,7 @@
 	"include": ["./src/**/*.ts", "./src/**/*.vue", "./tests/**/*.ts"],
 	"compilerOptions": {
 		"erasableSyntaxOnly": true,
-		"noEmit": true
+		"noEmit": true,
+		"noUnusedLocals": true
 	}
 }

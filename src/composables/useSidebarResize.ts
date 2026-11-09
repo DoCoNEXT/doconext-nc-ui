@@ -11,9 +11,10 @@
  * width is the reader's to set, and the app's clamp becomes only where the
  * panel opens.
  *
- * Reusable as-is: pair it with `styles/sidebar-resize.scss` (or a plain-CSS port
- * of it) and render the handle as a **sibling** of NcAppSidebar — the stylesheet
- * says what that sibling's parent has to be. NcAppSidebar has no slot at its own
+ * Its stylesheet, `styles/sidebar-resize.scss`, comes with
+ * `@doconext/nc-ui/styles`. Render the handle as a **sibling** of NcAppSidebar
+ * (the README has the markup); the stylesheet says what that sibling's parent
+ * has to be. NcAppSidebar has no slot at its own
  * root, which is why the handle cannot live inside it.
  *
  * The panel follows the pointer by writing a custom property straight onto
