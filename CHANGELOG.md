@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- `sideEffects` in package.json: an entry that imports only `configure` no
+  longer bundles every component and the Nextcloud Vue parts they use. Core's
+  tab in the Files sidebar was 473 KiB (gzipped) with them, 105 without.
 - A `DcnDialog` without buttons has no footer: the padding and the rule
   above it were drawn on NcDialog's empty footer too.
 

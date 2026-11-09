@@ -1,7 +1,7 @@
 # @doconext/nc-ui
 
-The look and layout the DoCoNEXT Nextcloud apps share: Fluent 2's layered
-style — a quiet canvas, raised cards, its shadow and type ramps — drawn with
+The look and layout the DoCoNEXT Nextcloud apps share: a layered style — a
+quiet canvas, raised cards, a scale of shadows and of type — drawn with
 Nextcloud's own colours, on top of Nextcloud's own Vue components.
 
 It does **not** replace Nextcloud's controls. Buttons, fields, selects and

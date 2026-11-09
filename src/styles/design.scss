@@ -1,8 +1,7 @@
-// The DoCoNEXT apps' visual language: Fluent 2's layered look (a quiet canvas, raised
-// cards, its shadow and type ramps) drawn with Nextcloud's own colours, so the
-// instance's theme, dark mode and high contrast keep working. Fluent's own
-// library is React-only and its Segoe font is not ours to ship; the controls
-// stay Nextcloud's.
+// The DoCoNEXT apps' visual language: a layered look (a quiet canvas, raised
+// cards, a scale of shadows and of type) drawn with Nextcloud's own colours, so
+// the instance's theme, dark mode and high contrast keep working. The controls
+// stay Nextcloud's, and so does the font.
 
 // Some selectors repeat a class on purpose: the library's scoped rules
 // (`.app-content[data-v-…]`, `.button-vue--tertiary[data-v-…]`) would otherwise
@@ -328,7 +327,7 @@ body:has(.dcn-app) > .modal-mask {
 	}
 }
 
-// NcDialog, in Fluent's arrangement: the title at the start, the content with
+// NcDialog, in the layered arrangement: the title at the start, the content with
 // room around it, the actions in a footer of their own. A dialog teleports to
 // <body>, out of the app's tree, so it opts in with
 // `dialog-classes="dcn-dialog"`; a dialog another app opens on this page (the
