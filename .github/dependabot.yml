@@ -1,0 +1,52 @@
+# Dependabot opens PRs to update dependencies, as in the DoCoNEXT apps.
+#
+# Once an ecosystem has open-pull-requests-limit PRs open, Dependabot opens
+# nothing more for it — silently: a backlog of unmerged PRs stops the loop
+# without anyone noticing. Minor and patch bumps are therefore grouped into one
+# PR per ecosystem per month, and the limit is low enough that a full ceiling
+# is noticed, not ignored.
+#
+# Security updates do not wait for the monthly schedule — they follow the
+# advisory, as long as Dependabot security updates are switched on in the
+# repository settings.
+version: 2
+updates:
+  # JavaScript (npm) packages. All of them are development dependencies: the
+  # package ships source and leaves its peers to the apps.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      # The platform libraries move together; a partial bump breaks peer deps.
+      nextcloud:
+        patterns:
+          - "@nextcloud/*"
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+        exclude-patterns:
+          - "@nextcloud/*"
+    ignore:
+      # Developed against the lowest @nextcloud/vue the peer range allows, so
+      # the gates prove that the floor works; CI tries the newest 9.x besides.
+      # A minor bump here would raise the floor without anyone deciding to.
+      # A new major still comes through, since it means a new peer range.
+      - dependency-name: "@nextcloud/vue"
+        update-types: ["version-update:semver-minor"]
+      # TypeScript 7 is the Go-native compiler; @vue/tsconfig and the
+      # Nextcloud toolchain do not support it yet.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions used by the workflows. The workflows pin actions to a
+  # commit SHA; Dependabot updates the SHA and the version comment together.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns:
+          - "*"

@@ -16,8 +16,10 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['tests/**/*.test.ts'],
-    // @nextcloud/vue imports its own stylesheets, which Node cannot load:
-    // let Vite transform it like the app's own code.
-    server: { deps: { inline: [/@nextcloud\/vue/] } },
+    setupFiles: ['tests/setup.ts'],
+    // @nextcloud/vue imports its own stylesheets, and so do the @nextcloud/*
+    // libraries it needs since 9.14: Node cannot load those, so Vite
+    // transforms them like the app's own code.
+    server: { deps: { inline: [/@nextcloud\//] } },
   },
 })

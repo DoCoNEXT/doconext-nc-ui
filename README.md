@@ -147,6 +147,12 @@ npm install
 npm run lint && npm run stylelint && npm run typecheck && npm test
 ```
 
+The package is developed against the lowest `@nextcloud/vue` it supports
+(`~9.11.0` in `devDependencies`), so the gates prove that floor. CI runs them a
+second time against the newest 9.x, because the stylesheets reach into the
+library's own markup, which a minor release can change. Dependabot leaves that
+floor alone: raising it is a decision, and it changes the peer range.
+
 To try a change in an app before it is tagged, check this repository out next
 to the app and point the app at it with
 `"@doconext/nc-ui": "file:../doconext-nc-ui"`. Add

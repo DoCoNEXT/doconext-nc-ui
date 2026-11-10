@@ -1,0 +1,106 @@
+name: CI
+
+# Every change runs it, Markdown included: README.md and CHANGELOG.md are part
+# of the package, and REUSE checks them.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Nothing in this workflow writes to the repository, so the token gets read
+# access and nothing else, whatever the repository's default setting says.
+permissions:
+  contents: read
+
+# A push that supersedes a running build cancels it; the result of the old
+# one would be discarded anyway.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The four quality gates of the README, once against the @nextcloud/vue the
+  # package is developed against (the lowest it supports) and once against the
+  # newest 9.x, since the peer range promises both. The stylesheets lean on the
+  # library's DOM, which a minor release can change.
+  gates:
+    name: Quality gates (@nextcloud/vue ${{ matrix.nextcloud-vue }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        nextcloud-vue: [lowest, newest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      # With the peers that version asks for, in the same install: a later
+      # `npm install` would rebuild the tree from package.json and undo it.
+      # The newest of each peer's ranges, since that is what an app updating
+      # today gets. `npm ls` would fail here: the tree no longer matches the
+      # ~9.11 in package.json, which is the point.
+      - name: Take the newest @nextcloud/vue 9
+        if: matrix.nextcloud-vue == 'newest'
+        run: |
+          version=$(npm view '@nextcloud/vue@^9' version --json | node -e 'console.log([].concat(JSON.parse(require("fs").readFileSync(0))).pop())')
+          peers=$(npm view "@nextcloud/vue@$version" peerDependencies --json | node -e '
+            const peers = JSON.parse(require("fs").readFileSync(0) || "{}")
+            console.log(Object.entries(peers).map(([name, range]) => `${name}@${range.split("||").pop().trim()}`).join(" "))')
+          echo "@nextcloud/vue@$version $peers"
+          npm install --no-save "@nextcloud/vue@$version" $peers
+          node -p '"installed: @nextcloud/vue " + require("./node_modules/@nextcloud/vue/package.json").version'
+      - run: npm run lint
+      - run: npm run stylelint
+      - run: npm run typecheck
+      - run: npm test
+
+  reuse:
+    name: REUSE compliance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0
+
+  # What an app's `github:` install gets: npm packs the repository by `files`.
+  package:
+    name: Package contents
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm pack --dry-run --json --ignore-scripts | node .github/scripts/check-package.mjs
+
+  # Informational, not a gate. The package has no dependencies of its own:
+  # what it ships is source, and its peers are installed and audited by each
+  # app, whose own CI blocks on them. `npm audit --omit=dev` would always be
+  # clean here, so a blocking step on it would only look like coverage. What
+  # this reports is the development toolchain; Dependabot raises the fixes.
+  # Make a blocking production audit of it the day `dependencies` is added.
+  audit:
+    name: Dependency audit (informational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=moderate || true
