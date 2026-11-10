@@ -83,7 +83,7 @@ own border and shadow.
 | Component | What it is |
 |---|---|
 | `DcnPageTitle` | A page's title (h2, 24/32 semibold) |
-| `DcnCard` | A raised surface; `padded` for 16px inside |
+| `DcnCard` | A raised surface; `padded` for 16px inside; `tag`: div (default), section, article, aside, li |
 | `DcnBadge` | `tone`: neutral, info, success, warning, muted; `dot`: none, filled, hollow |
 | `DcnSegmented` | One of several views or filters; `tabs` for a tablist; options may carry a `count` |
 | `DcnStat` | A figure with its caption above it |

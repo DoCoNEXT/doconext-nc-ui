@@ -18,3 +18,7 @@ export interface SegmentedOption<V extends string | number = string> {
   icon?: object
   disabled?: boolean
 }
+
+/** The elements a DcnCard may be. */
+export const CARD_TAGS = ['div', 'section', 'article', 'aside', 'li'] as const
+export type CardTag = typeof CARD_TAGS[number]

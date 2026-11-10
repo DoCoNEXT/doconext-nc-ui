@@ -3,7 +3,7 @@
  * Nextcloud's own components. See README.md.
  */
 export { configure } from './config'
-export type { BadgeDot, BadgeTone, SegmentedOption } from './types'
+export type { BadgeDot, BadgeTone, CardTag, SegmentedOption } from './types'
 
 export { default as DcnBadge } from './components/DcnBadge.vue'
 export { default as DcnCard } from './components/DcnCard.vue'
