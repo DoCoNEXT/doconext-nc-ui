@@ -22,3 +22,13 @@ export interface SegmentedOption<V extends string | number = string> {
 /** The elements a DcnCard may be. */
 export const CARD_TAGS = ['div', 'section', 'article', 'aside', 'li'] as const
 export type CardTag = typeof CARD_TAGS[number]
+
+/** What a principal picker can offer. 'circle' is how Nextcloud stores a Team. */
+export type DcnPrincipalKind = 'user' | 'group' | 'circle'
+
+/** A user, group or Team, as an app's principal search returns it. */
+export interface DcnPrincipal {
+  type: DcnPrincipalKind
+  id: string
+  displayName: string
+}

@@ -84,12 +84,13 @@ own border and shadow.
 |---|---|
 | `DcnPageTitle` | A page's title (h2, 24/32 semibold) |
 | `DcnCard` | A raised surface; `padded` for 16px inside; `tag`: div (default), section, article, aside, li |
-| `DcnBadge` | `tone`: neutral, info, success, warning, muted; `dot`: none, filled, hollow |
+| `DcnBadge` | `tone`: neutral, info, success, warning, muted; `dot`: none, filled, hollow; `color`: an app's own category colour (a themed variable), instead of `tone` |
 | `DcnSegmented` | One of several views or filters; `tabs` for a tablist; options may carry a `count` |
 | `DcnStat` | A figure with its caption above it |
 | `DcnDialog` | `NcDialog` in the layered arrangement; takes all its props and slots |
 | `DcnLoading` | Spinner and a line of text where content will appear (`role="status"`); `label`, `compact`. A busy button keeps a bare `NcLoadingIcon` |
 | `DcnNavigationRailToggle` | Collapses the navigation to icons; labels are the app's translations |
+| `DcnPrincipalPicker` | Picks users, groups and Teams from the app's own search: one at a time (`@select`), one held (`v-model`), or several (`multiple`) |
 
 `useNavigationRail()` and `useSidebarResize()` remember their state in this
 browser, keyed by the app id from `configure()`: a layout belongs to the
@@ -122,6 +123,39 @@ bottom (`src/styles/sidebar-resize.scss` says why):
 Here `const resize = useSidebarResize()`. Keep `pointercancel`, or a drag the
 browser takes over (a touch scroll, say) never ends. `maxWidth` is the widest
 the current window allows, not a constant.
+
+### Picking users, groups and Teams
+
+`DcnPrincipalPicker` draws the field, the avatars and the empty texts; the
+app does the searching. `search` is the app's own lookup, so who is offered —
+guests or not, members of some groups only, Teams only where the server has
+them — stays with the app and its backend, and the package makes no request.
+
+```vue
+<!-- several in the field -->
+<DcnPrincipalPicker v-model="assignees" multiple
+                    :search="q => api.searchPrincipals(q)" />
+
+<!-- one, which stays in the field (an owner) -->
+<DcnPrincipalPicker v-model="owner" :kinds="['user']"
+                    :search="q => api.searchUsers(q)" />
+
+<!-- one at a time, the field empties after each; the caller keeps the list -->
+<DcnPrincipalPicker :search="q => api.searchPrincipals(q, { teams: true })"
+                    :kinds="teamsAvailable ? ['user', 'group', 'circle'] : ['user', 'group']"
+                    @select="grant" />
+```
+
+`search` gets what was typed, 300 ms after typing pauses, and resolves to
+`DcnPrincipal[]` (`{ type: 'user' | 'group' | 'circle', id, displayName }`);
+keep it to a page of matches. `kinds` says what it can return and chooses the
+placeholder, so pass Teams only where the search returns them. `restricted`
+says the search is narrowed, so the empty text says so too.
+
+Its words go in the app's catalogue: "Search users or groups…" and the other
+placeholders, "Type a name to search", "No matches", "Group", "Team",
+"Loading…", and, with `restricted`, "Type a name to search the allowed
+groups" and "No matches in the allowed groups".
 
 ## How it is consumed
 

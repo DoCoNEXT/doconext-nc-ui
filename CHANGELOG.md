@@ -2,6 +2,22 @@
 
 ## 0.1.0 — unreleased
 
+- A multiple NcSelect that is focused but closed (right after a pick) keeps
+  its border; the library's own rules left only a white outline over it.
+
+- An NcSelect with `label-outside` no longer keeps the room for a floating
+  label: it lines up with the NcTextField beside it, and the chips of a
+  multiple select sit in the middle of the field.
+
+- `DcnBadge` takes a `color`: an app's own category colour (a pipeline stage,
+  a priority), as text on a 13% tint of it, instead of one of the tones.
+
+- `DcnPrincipalPicker`, from Core's PrincipalPicker: users, groups and Teams
+  from the app's own `search`: one at a time (`@select`), one held in the
+  field (`v-model`), or several (`multiple`).
+  A user and a group with the same id stay two options, and an answer that
+  a later search overtook no longer fills the list.
+
 - `sideEffects` in package.json: an entry that imports only `configure` no
   longer bundles every component and the Nextcloud Vue parts they use. Core's
   tab in the Files sidebar was 473 KiB (gzipped) with them, 105 without.

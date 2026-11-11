@@ -53,6 +53,35 @@ body:has(.dcn-app) > .modal-mask {
 	--color-loading-dark: var(--color-primary-element);
 }
 
+// NcSelect keeps room above itself for a label that floats on its border:
+// `margin: 6px 0 4px` on the root, and on a multiple select `padding-block:
+// 6px 0` inside the field. With the label outside (`label-outside`, as a
+// form with labels above its fields has it) nothing floats there, but the
+// room stays: the select sits 6px lower than an NcTextField beside it, and
+// the chips of a multiple select sit 10px from the top and 4px from the
+// bottom. The library drops the room for one part of a single select only.
+// Within the app and its dialogs, so another app's selects are left alone.
+.dcn-app,
+body:has(.dcn-app) > .modal-mask {
+	.nc-select.v-select.select:has(.input-field--label-outside) {
+		margin-block: 0;
+	}
+
+	.nc-select.v-select.select.vs--multiple:has(.input-field--label-outside) .vs__dropdown-toggle {
+		padding-block: 3px;
+	}
+
+	// Focused but closed (right after a pick, say), a multiple select lost its
+	// border: vue-select's focus rule draws a dark border inside a white
+	// outline, NcSelect's rule for a multiple select makes that border
+	// transparent and wins the tie, and the white outline is left on top of
+	// the thin ring that is the field's border. This puts the dark border back,
+	// so the field looks focused, as an NcTextField does.
+	.nc-select.v-select.select.vs--multiple:not(.vs--open, .vs--disabled) .vs__dropdown-toggle:focus-within {
+		border-color: var(--color-main-text);
+	}
+}
+
 .dcn-app .app-content.app-content {
 	background-color: var(--dcn-canvas);
 }
@@ -207,6 +236,13 @@ body:has(.dcn-app) > .modal-mask {
 
 	&--muted {
 		color: var(--color-text-maxcontrast);
+	}
+
+	// An app's own category colour (DcnBadge's `color`): the text in it, on a
+	// tint of it.
+	&--color {
+		background-color: color-mix(in srgb, var(--dcn-badge-color) 13%, transparent);
+		color: var(--dcn-badge-color);
 	}
 
 	&--dot-filled::before,
