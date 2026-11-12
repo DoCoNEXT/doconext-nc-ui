@@ -61,13 +61,19 @@ body:has(.dcn-app) > .modal-mask {
 // the chips of a multiple select sit 10px from the top and 4px from the
 // bottom. The library drops the room for one part of a single select only.
 // Within the app and its dialogs, so another app's selects are left alone.
+// And `.input-field--label-outside` alone does not say the label is outside:
+// NcSelect puts it on the inner input of every multiple select, because there
+// the label is drawn by the select itself, as `.select__label` on the border.
+// A multiple select with its label on the border therefore lost the room that
+// label needs — 40px tall, and its label over whatever was above it. So the
+// label is asked about directly: no `.select__label`, no room to keep.
 .dcn-app,
 body:has(.dcn-app) > .modal-mask {
-	.nc-select.v-select.select:has(.input-field--label-outside) {
+	.nc-select.v-select.select:has(.input-field--label-outside):not(:has(.select__label)) {
 		margin-block: 0;
 	}
 
-	.nc-select.v-select.select.vs--multiple:has(.input-field--label-outside) .vs__dropdown-toggle {
+	.nc-select.v-select.select.vs--multiple:has(.input-field--label-outside):not(:has(.select__label)) .vs__dropdown-toggle {
 		padding-block: 3px;
 	}
 
