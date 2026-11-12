@@ -2,6 +2,11 @@
 
 ## 0.1.0 — unreleased
 
+- `DcnSettingsNavigation`, from Core's SettingsNavigation: while an app's
+  own settings are open, the navigation lists the settings pages and ends in
+  "Leave settings". It works with a router (`to`) or without (`@select`,
+  `@back`), and the README says which settings belong where.
+
 - `dcn-settings-page` on the root of an admin or personal settings page keeps
   it beside the settings navigation's toggle, which stayed in the corner and
   covered the content scrolled under it.

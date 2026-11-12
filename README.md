@@ -104,6 +104,7 @@ own border and shadow.
 | `DcnLoading` | Spinner and a line of text where content will appear (`role="status"`); `label`, `compact`. A busy button keeps a bare `NcLoadingIcon` |
 | `DcnNavigationRailToggle` | Collapses the navigation to icons; labels are the app's translations |
 | `DcnPrincipalPicker` | Picks users, groups and Teams from the app's own search: one at a time (`@select`), one held (`v-model`), or several (`multiple`) |
+| `DcnSettingsNavigation` | The navigation while the app's own settings are open: one item per settings page and "Leave settings"; with a router (`to`) or without (`@select`, `@back`) |
 
 `useNavigationRail()` and `useSidebarResize()` remember their state in this
 browser, keyed by the app id from `configure()`: a layout belongs to the
@@ -169,6 +170,50 @@ Its words go in the app's catalogue: "Search users or groups…" and the other
 placeholders, "Type a name to search", "No matches", "Group", "Team",
 "Loading…", and, with `restricted`, "Type a name to search the allowed
 groups" and "No matches in the allowed groups".
+
+### Functional settings
+
+Every DoCoNEXT app reaches its settings the same way:
+
+- **Nextcloud's admin settings** (`/settings/admin/<app>`) hold what a system
+  administrator decides: connections and secrets, who the app's functional
+  administrators are, what is switched on.
+- **The app's own settings** hold what a functional administrator shapes
+  inside the app: option lists, templates, rates, imports. They open from a
+  "Settings" item with a cog at the bottom of the app navigation, shown to
+  functional administrators only. There the navigation gives way to
+  `DcnSettingsNavigation`: one item per settings page, and "Leave settings" at
+  the bottom. For a system administrator, the first settings page links to
+  Nextcloud's admin settings of the app.
+- **A user's own preferences** stay on Nextcloud's personal settings.
+
+The shell component swaps one navigation for the other, so the rail styles
+both:
+
+```vue
+<NcContent :app-name="APP_ID" class="dcn-app" :class="railClass">
+  <DcnSettingsNavigation v-if="route.name === 'settings'"
+                         :tabs="settingsTabs"
+                         :active="route.params.tab || 'general'"
+                         :back-to="{ name: 'home' }" />
+  <AppNavigation v-else />
+  …
+</NcContent>
+```
+
+```ts
+const settingsTabs: SettingsTab[] = [
+  { id: 'general', label: t('General'), icon: Settings2, to: { name: 'settings', params: { tab: 'general' } } },
+  { id: 'lists', label: t('Option lists'), icon: List, to: { name: 'settings', params: { tab: 'lists' } } },
+]
+```
+
+Without a router, leave out `to` and `back-to`, and switch the view on
+`@select="id => tab = id"` and `@back`. The `header` slot goes in the header
+row before the rail toggle, for what the app keeps up there (Core's realm
+switcher). Its words go in the app's catalogue: "Settings" (the navigation's
+name), "Leave settings", "Expand menu" and "Collapse menu"; `label`,
+`back-label`, `expand-label` and `collapse-label` replace them.
 
 ## How it is consumed
 

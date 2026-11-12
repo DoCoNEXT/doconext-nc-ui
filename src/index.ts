@@ -3,7 +3,7 @@
  * Nextcloud's own components. See README.md.
  */
 export { configure } from './config'
-export type { BadgeDot, BadgeTone, CardTag, DcnPrincipal, DcnPrincipalKind, SegmentedOption } from './types'
+export type { BadgeDot, BadgeTone, CardTag, DcnPrincipal, DcnPrincipalKind, SegmentedOption, SettingsTab } from './types'
 
 export { default as DcnBadge } from './components/DcnBadge.vue'
 export { default as DcnCard } from './components/DcnCard.vue'
@@ -13,6 +13,7 @@ export { default as DcnNavigationRailToggle } from './components/DcnNavigationRa
 export { default as DcnPageTitle } from './components/DcnPageTitle.vue'
 export { default as DcnPrincipalPicker } from './components/DcnPrincipalPicker.vue'
 export { default as DcnSegmented } from './components/DcnSegmented.vue'
+export { default as DcnSettingsNavigation } from './components/DcnSettingsNavigation.vue'
 export { default as DcnStat } from './components/DcnStat.vue'
 
 export { RAIL_CLASS, useNavigationRail } from './composables/useNavigationRail'

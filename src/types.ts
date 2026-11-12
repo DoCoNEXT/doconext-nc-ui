@@ -32,3 +32,17 @@ export interface DcnPrincipal {
   id: string
   displayName: string
 }
+
+/** One page of an app's functional settings, in DcnSettingsNavigation. */
+export interface SettingsTab {
+  id: string
+  /** In the app's language. */
+  label: string
+  /** Drawn at 20px, such as a Lucide icon; typed loosely, as `SegmentedOption.icon` is. */
+  icon: object
+  /**
+   * Where it goes, with a router: what vue-router takes as a `to`. Without
+   * one, the navigation emits `select` with the id instead.
+   */
+  to?: string | Record<string, unknown>
+}
