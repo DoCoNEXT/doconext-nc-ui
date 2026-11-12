@@ -102,6 +102,19 @@ body:has(.dcn-app) > .modal-mask {
 	}
 }
 
+// The root of an admin or personal settings page. Nextcloud's settings
+// navigation keeps its toggle in the top inline-start corner of the content:
+// one clickable area wide, its own padding from the edge, absolutely placed,
+// so it stays where it is while the content scrolls under it. Nextcloud 35
+// leaves room above the first section and none beside it. This moves the page
+// past the toggle's far edge, less the inset NcSettingsSection already has,
+// the way Nextcloud reckons the room above. Beside the toggle nothing can
+// pass under it, so the page needs no room above as well.
+// The padding falls back to the library's value where Nextcloud sets none.
+.dcn-settings-page {
+	padding-inline-start: calc(2 * var(--app-navigation-padding, 8px) + var(--default-clickable-area) - var(--default-grid-baseline) * 7);
+}
+
 .dcn-page-title {
 	margin: 0;
 	font-size: 24px;

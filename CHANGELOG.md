@@ -2,6 +2,10 @@
 
 ## 0.1.0 — unreleased
 
+- `dcn-settings-page` on the root of an admin or personal settings page keeps
+  it beside the settings navigation's toggle, which stayed in the corner and
+  covered the content scrolled under it.
+
 - A multiple NcSelect that is focused but closed (right after a pick) keeps
   its border; the library's own rules left only a white outline over it.
 

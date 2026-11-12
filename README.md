@@ -27,6 +27,19 @@ Put `class="dcn-app"` on the app's `NcContent`, and on the root of each other
 mount point (its admin and personal settings): the canvas colour, the page
 entrance and the accent-coloured spinners key off it.
 
+A settings root also takes `dcn-settings-page`, which moves it clear of the
+settings navigation's toggle:
+
+```vue
+<div class="dcn-app dcn-settings-page">
+  <NcSettingsSection :name="t('Connection')">…</NcSettingsSection>
+</div>
+```
+
+The room is reckoned from NcSettingsSection's own inset, so anything else at
+the top of the page (a tab bar, a notice) takes that inset too:
+`calc(var(--default-grid-baseline) * 7)`.
+
 The navigation rail collapses the app navigation to its icons instead of
 hiding it. It takes three things in the shell component, the one that renders
 `NcContent`:
