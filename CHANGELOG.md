@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — unreleased
+## 0.1.0 — 2026-11-12
 
 - `DcnSettingsNavigation`, from Core's SettingsNavigation: while an app's
   own settings are open, the navigation lists the settings pages and ends in
