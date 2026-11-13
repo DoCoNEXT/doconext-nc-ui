@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-11-13
 
 - A multiple NcSelect with its label on the border keeps the room for that
   label again. 0.1.0 took it for an NcSelect with `label-outside`, which

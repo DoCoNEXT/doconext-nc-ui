@@ -1,6 +1,6 @@
 {
   "name": "@doconext/nc-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The DoCoNEXT Nextcloud apps' shared look and layout: a layered style on top of Nextcloud's own Vue components.",
   "license": "AGPL-3.0-or-later",
   "private": true,
