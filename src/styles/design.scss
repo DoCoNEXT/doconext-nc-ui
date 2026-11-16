@@ -422,6 +422,19 @@ body .dialog__modal.dialog__modal:has(.dcn-dialog) {
 		padding: 4px 24px 20px;
 	}
 
+	// `:content-scrolls="false"`: the content lays out and its root scrolls a
+	// part of itself, in all the height the modal leaves.
+	.dialog__content.dcn-dialog__content--own-scroll {
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+
+		> * {
+			flex: 1 1 auto;
+			min-height: 0;
+		}
+	}
+
 	.dialog__text {
 		padding-block-end: 0;
 	}

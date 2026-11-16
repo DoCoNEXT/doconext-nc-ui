@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- `DcnDialog` takes `content-scrolls`. Off, the dialog's content no longer
+  scrolls as a whole: its root fills the room the modal leaves, and the part
+  of it that scrolls (the open tab of a dialog with tabs) does so alone, with
+  the tabs in view. A dialog with a height of its own inside NcDialog's
+  scrolling content showed two scrollbars whenever the two heights disagreed.
+
 ## 0.1.1 — 2026-11-13
 
 - A multiple NcSelect with its label on the border keeps the room for that

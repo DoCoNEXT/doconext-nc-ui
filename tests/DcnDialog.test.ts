@@ -74,4 +74,33 @@ describe('DcnDialog', () => {
     w.findComponent({ name: 'NcDialog' }).vm.$emit('update:open', false)
     expect(closes).toEqual([false])
   })
+  /*
+   * Do:     open a dialog as it was, one with content-scrolls off, and one
+   *         with that and contentClasses of the app's own.
+   * Expect: only the second and third carry the class the stylesheet keys
+   *         off; the app's own content class stays beside it.
+   * Why:    every dialog that does not ask keeps NcDialog's scrolling, and
+   *         an app's own content class must not be lost to the option.
+   */
+  it('marks the content only when it scrolls itself', async () => {
+    await open()
+    expect(document.querySelector('.dcn-dialog__content--own-scroll')).toBeNull()
+    wrapper?.unmount()
+    document.body.innerHTML = ''
+
+    await open({ props: { contentScrolls: false } })
+    expect(document.querySelector('.dialog__content.dcn-dialog__content--own-scroll')).not.toBeNull()
+    wrapper?.unmount()
+    document.body.innerHTML = ''
+
+    await open({ props: { contentScrolls: false, contentClasses: 'invoice-content' } })
+    const content = document.querySelector('.dialog__content')
+    expect(content?.classList.contains('dcn-dialog__content--own-scroll')).toBe(true)
+    expect(content?.classList.contains('invoice-content')).toBe(true)
+  })
+
+  it('keeps the app\'s content classes when the content scrolls as a whole', async () => {
+    await open({ props: { contentClasses: 'invoice-content' } })
+    expect(document.querySelector('.dialog__content')?.classList.contains('invoice-content')).toBe(true)
+  })
 })

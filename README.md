@@ -100,7 +100,7 @@ own border and shadow.
 | `DcnBadge` | `tone`: neutral, info, success, warning, muted; `dot`: none, filled, hollow; `color`: an app's own category colour (a themed variable), instead of `tone` |
 | `DcnSegmented` | One of several views or filters; `tabs` for a tablist; options may carry a `count` |
 | `DcnStat` | A figure with its caption above it |
-| `DcnDialog` | `NcDialog` in the layered arrangement; takes all its props and slots |
+| `DcnDialog` | `NcDialog` in the layered arrangement; takes all its props and slots. `:content-scrolls="false"` for content that scrolls a part of itself (the open tab of a dialog with tabs): its root fills the dialog, and that part keeps `overflow-y: auto` with no height of its own |
 | `DcnLoading` | Spinner and a line of text where content will appear (`role="status"`); `label`, `compact`. A busy button keeps a bare `NcLoadingIcon` |
 | `DcnNavigationRailToggle` | Collapses the navigation to icons; labels are the app's translations |
 | `DcnPrincipalPicker` | Picks users, groups and Teams from the app's own search: one at a time (`@select`), one held (`v-model`), or several (`multiple`) |
