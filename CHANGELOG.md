@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.2 — 2026-11-16
 
 - `DcnDialog` takes `content-scrolls`. Off, the dialog's content no longer
   scrolls as a whole: its root fills the room the modal leaves, and the part
