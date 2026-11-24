@@ -1,6 +1,6 @@
-# Dossiers
+# Overzicht
 
-Klik op een type.
+Klik op een rij.
 
 ## Zoeken
 

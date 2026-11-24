@@ -1,6 +1,6 @@
 # Mappen
 
-Een dossier kan een map hebben in DoCoNEXT Core en in DoCoNEXT.
+Een document staat in een map, in DoCoNEXT Core en in DoCoNEXT.
 
 ## De map openen
 

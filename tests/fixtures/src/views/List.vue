@@ -1,3 +1,3 @@
 <template>
-  <DcnPageTitle help="Gebruik/Dossiers#zoeken">Zaken</DcnPageTitle>
+  <DcnPageTitle help="Gebruik/Overzicht#zoeken">Overzicht</DcnPageTitle>
 </template>

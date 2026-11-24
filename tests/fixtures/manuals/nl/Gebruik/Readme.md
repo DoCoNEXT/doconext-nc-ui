@@ -1,12 +1,12 @@
 # Handleiding DoCoNEXT
 
-DoCoNEXT houdt dossiers bij.
+DoCoNEXT houdt documenten bij.
 
 | Je wilt | Lees |
 | --- | --- |
 | Met documenten werken | [Mappen](Mappen.md) |
-| Dossiers vinden | [Dossiers](Dossiers.md) |
+| Iets vinden | [Overzicht](Overzicht.md) |
 
 ## Woorden
 
-Een **dossier** is het woord in deze handleiding.
+Een **document** is het woord in deze handleiding.

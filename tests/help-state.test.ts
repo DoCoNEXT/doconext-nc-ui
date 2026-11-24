@@ -75,13 +75,13 @@ describe('which manuals a reader is shown', () => {
 
 describe('the installation\'s own words', () => {
   it('replace the product name in the text, the longer name first', () => {
-    const terms = { 'DoCoNEXT Core': 'Zaken', DoCoNEXT: 'Zaken' }
-    expect(applyTerms('<p>In DoCoNEXT Core en DoCoNEXT.</p>', terms)).toBe('<p>In Zaken en Zaken.</p>')
+    const terms = { 'DoCoNEXT Core': 'Werkplek', DoCoNEXT: 'Werkplek' }
+    expect(applyTerms('<p>In DoCoNEXT Core en DoCoNEXT.</p>', terms)).toBe('<p>In Werkplek en Werkplek.</p>')
   })
 
   it('never inside a tag, and never inside a longer word', () => {
     const html = '<a href="https://doconext.com/DoCoNEXT">DoCoNEXTs DoCoNEXT</a>'
-    expect(applyTerms(html, { DoCoNEXT: 'Zaken' })).toBe('<a href="https://doconext.com/DoCoNEXT">DoCoNEXTs Zaken</a>')
+    expect(applyTerms(html, { DoCoNEXT: 'Werkplek' })).toBe('<a href="https://doconext.com/DoCoNEXT">DoCoNEXTs Werkplek</a>')
   })
 
   it('escape what they put in', () => {
@@ -162,10 +162,10 @@ describe('the help button', () => {
   })
 
   it('sits beside a page title that names a topic, and nowhere else', () => {
-    const withHelp = mount(DcnPageTitle, { props: { help: 'Gebruik/Mappen' }, slots: { default: 'Zaken' } })
-    expect(withHelp.find('.dcn-page-title-row h2.dcn-page-title').text()).toBe('Zaken')
+    const withHelp = mount(DcnPageTitle, { props: { help: 'Gebruik/Mappen' }, slots: { default: 'Werkplek' } })
+    expect(withHelp.find('.dcn-page-title-row h2.dcn-page-title').text()).toBe('Werkplek')
     expect(withHelp.find('.dcn-help-button').exists()).toBe(true)
-    const without = mount(DcnPageTitle, { slots: { default: 'Zaken' } })
+    const without = mount(DcnPageTitle, { slots: { default: 'Werkplek' } })
     expect(without.element.tagName).toBe('H2')
     expect(without.find('.dcn-help-button').exists()).toBe(false)
   })

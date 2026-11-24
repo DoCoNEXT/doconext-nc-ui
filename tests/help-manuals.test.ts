@@ -25,7 +25,7 @@ describe('anchors', () => {
   })
 
   it('keep a second heading with the same text reachable', () => {
-    expect(headingsOf(page('Gebruik/Dossiers').source).map((h) => h.id)).toEqual(['dossiers', 'zoeken', 'filteren', 'filteren-2'])
+    expect(headingsOf(page('Gebruik/Overzicht').source).map((h) => h.id)).toEqual(['overzicht', 'zoeken', 'filteren', 'filteren-2'])
   })
 })
 
@@ -35,7 +35,7 @@ describe('reading the manuals', () => {
   })
 
   it('orders the pages as the start page links them, not by name', () => {
-    expect(manuals[0]!.pages.map((p) => p.name)).toEqual(['Mappen', 'Dossiers'])
+    expect(manuals[0]!.pages.map((p) => p.name)).toEqual(['Mappen', 'Overzicht'])
   })
 
   it('finds nothing for a language without manuals', () => {
@@ -53,9 +53,9 @@ describe('a page as HTML', () => {
   })
 
   it('turns a link to another page, and to a heading on the same page, into a topic', () => {
-    const { html } = renderPage(page('Gebruik/Dossiers'), manuals)
+    const { html } = renderPage(page('Gebruik/Overzicht'), manuals)
     expect(html).toContain('data-help-topic="Gebruik/Mappen#de-map-openen"')
-    expect(html).toContain('data-help-topic="Gebruik/Dossiers#filteren"')
+    expect(html).toContain('data-help-topic="Gebruik/Overzicht#filteren"')
   })
 
   it('opens a link out of the manuals in a new tab', () => {
@@ -63,8 +63,8 @@ describe('a page as HTML', () => {
   })
 
   it('reports a link to a heading that does not exist', () => {
-    const broken = { ...page('Gebruik/Mappen'), source: '# Mappen\n\nZie [weg](Dossiers.md#bestaat-niet).\n' }
-    expect(renderPage(broken, manuals).problems).toEqual([expect.stringContaining('no heading "#bestaat-niet" on Gebruik/Dossiers')])
+    const broken = { ...page('Gebruik/Mappen'), source: '# Mappen\n\nZie [weg](Overzicht.md#bestaat-niet).\n' }
+    expect(renderPage(broken, manuals).problems).toEqual([expect.stringContaining('no heading "#bestaat-niet" on Gebruik/Overzicht')])
   })
 
   it('does not pass raw HTML through', () => {
@@ -86,7 +86,7 @@ describe('topics', () => {
     expect(findHelpTopics(srcDir).map((f) => [f.file, f.kind, f.topic]).sort()).toEqual([
       ['views/Folder.vue', 'button', 'Gebruik/Mappen#een-bestand'],
       ['views/Header.vue', 'forward', null],
-      ['views/List.vue', 'title', 'Gebruik/Dossiers#zoeken'],
+      ['views/List.vue', 'title', 'Gebruik/Overzicht#zoeken'],
       ['views/Types.vue', 'title', 'Beheer#rollen'],
       ['views/links.ts', 'call', 'Beheer#rollen'],
     ])
