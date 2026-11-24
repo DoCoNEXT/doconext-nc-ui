@@ -129,6 +129,16 @@ body:has(.dcn-app) > .modal-mask {
 	letter-spacing: -0.01em;
 }
 
+// A title with the screen's help beside it (DcnPageTitle's `help`): the
+// question mark follows the words instead of sitting at the far edge, so it
+// reads as being about this title.
+.dcn-page-title-row {
+	display: flex;
+	align-items: center;
+	gap: var(--default-grid-baseline);
+	min-width: 0;
+}
+
 .dcn-card {
 	// Fields inside paint their floating label with this colour; it has to be
 	// the surface they stand on.

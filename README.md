@@ -215,6 +215,84 @@ switcher). Its words go in the app's catalogue: "Settings" (the navigation's
 name), "Leave settings", "Expand menu" and "Collapse menu"; `label`,
 `back-label`, `expand-label` and `collapse-label` replace them.
 
+### Help
+
+An app that has manuals in `docs/manuals/<language>/<Manual>/`, written for
+Nextcloud Collectives, can show them inside itself: a **Help** page in its
+navigation, and a question mark beside a screen that opens the manual at the
+part about that screen, in a panel beside the work. The Markdown stays as it
+is for Collectives; nothing is added to it.
+
+**Build.** The `dcnManuals` Vite plugin compiles the manuals into the bundle:
+HTML per page, each a chunk loaded when somebody opens it, with an index of
+the titles and headings. The browser needs no Markdown library, the app no
+route to serve files, and `docs/` need not ship. The build fails on a link to
+a page or heading that does not exist.
+
+```ts
+// vite.config.ts
+import { dcnManuals } from '@doconext/nc-ui/vite'
+config: { plugins: [dcnManuals({ manuals: ['Gebruik', 'Beheer'], languages: ['nl'] })] }
+
+// env.d.ts
+/// <reference types="@doconext/nc-ui/help-virtual" />
+```
+
+**Run.** Each entry point that shows help configures it once, after
+`configure()`:
+
+```ts
+import { configureHelp } from '@doconext/nc-ui'
+import { helpIndex, loadHelpPage } from 'virtual:dcn-manuals'
+
+configureHelp({
+  index: helpIndex,
+  loadPage: loadHelpPage,
+  language: getLanguage(),
+  manuals: shownToThisReader,              // the app decides, e.g. from its initial state
+  terms: { DoCoNEXT: installationsOwnName }, // the product name as this install calls it
+  pageUrl: (target) => …,                  // the help page's address, for a link from outside the app
+  openPage: (target) => router.push(…),    // "Open as page", inside the app
+})
+```
+
+The shell component puts `<DcnHelpPanel />` beside its `NcContent` children
+once, and swaps its navigation for `DcnHelpNavigation` on the help route, as
+it does for settings; the route shows `<DcnHelpView :topic>`. With the app's
+`NcAppSidebar` open, the panel stands beside it rather than over it, since the
+sidebar is often what the reader asked about; a window too narrow for both
+gets it over the sidebar. Where no panel
+is on the page (the Files sidebar, a settings page), a help button opens the
+help page in a new tab instead; `helpUrl(topic)` gives that address for
+`NcSettingsSection`'s own `doc-url`.
+
+**Topics.** A topic is `Manual/Page#section`: the manual's folder, the page's
+file name, and the anchor of a heading, which is the heading in lower case
+with accents dropped and hyphens between the words ("Eén bestand" is
+`een-bestand`). Topics are written against the manuals' first language; a
+translated page opens at its top.
+
+**Few question marks.** A page full of them is worse than none. The rule:
+
+- a screen's help goes beside its title: `<DcnPageTitle help="Gebruik/Mappen">`,
+  or `help="…"` on the app's own title component;
+- a lone `<DcnHelpButton topic="…">` only where the screen has no title to put
+  it beside, such as a list that opens with its filters, or a sidebar tab;
+- one per screen. A field, a dialog or a section gets none: its own
+  description says what it is, and the screen's help covers the rest.
+
+`checkHelpTopics` from `@doconext/nc-ui/testing` holds the app to it in a
+unit test: every topic exists, each lone button is listed with its reason in
+`allowedButtons`, and each component that passes a topic on (`:help`,
+`:topic`) is listed in `forwarders`. Write topics out as literals; the check
+only sees those.
+
+The help's words go in the app's catalogue: "Help", "Back", "Open as page",
+"Close help", "On this page", "Search the help", "Start", "Leave help",
+"Nothing in the help matches.", "This help is not yet available in your
+language.", "This page of the help could not be loaded." and "This page of the
+help could not be found.".
+
 ## How it is consumed
 
 Source, not a build: the entry points are `.ts`, `.vue` and `.scss`, which

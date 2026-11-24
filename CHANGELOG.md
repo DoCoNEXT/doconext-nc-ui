@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Help: an app's manuals, written for Nextcloud Collectives, shown inside the
+  app. The `dcnManuals` Vite plugin (`@doconext/nc-ui/vite`) compiles them
+  into the bundle and fails the build on a broken link; `DcnHelpPanel` shows a
+  page beside the work, `DcnHelpView` and `DcnHelpNavigation` as a page of its
+  own, `DcnHelpButton` opens one; `configureHelp`, `useHelp`, `openHelp` and
+  `helpUrl` drive them. `DcnPageTitle` takes `help`, the one place a screen's
+  question mark goes. `checkHelpTopics` (`@doconext/nc-ui/testing`) checks an
+  app's topics and keeps its question marks few. See the README's "Help".
+  New dependency: `markdown-it`, used at build time only.
+
 ## 0.1.2 — 2026-11-16
 
 - `DcnDialog` takes `content-scrolls`. Off, the dialog's content no longer

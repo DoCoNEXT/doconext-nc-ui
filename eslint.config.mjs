@@ -9,7 +9,7 @@ export default defineConfig([
     // are not subject to the app's source style rules.
     {
         ignores: [
-            'node_modules/**', 'eslint.config.mjs', 'stylelint.config.cjs', 'vitest.config.ts',
+            'node_modules/**', 'tests/fixtures/**', 'eslint.config.mjs', 'stylelint.config.cjs', 'vitest.config.ts',
         ],
     },
 
@@ -24,6 +24,10 @@ export default defineConfig([
     // churn-only diffs across a codebase written to a different house style.
     {
         name: 'doconext-nc-ui/overrides',
+        // TypeScript and Vue only: the typescript-eslint plugin these rules
+        // name is registered for those files, and a rule whose plugin is
+        // missing is an error for every file it reaches.
+        files: ['**/*.ts', '**/*.vue'],
         rules: {
             // This codebase is 2-space indented; @nextcloud-config is tabs.
             // The house style wins over the shipped default, so the rule bends
@@ -81,6 +85,34 @@ export default defineConfig([
             eqeqeq: 'warn',
             'no-console': 'warn',
             'no-useless-assignment': 'warn',
+        },
+    },
+
+    // The help's Node half (src/vite, src/testing, src/help/topic.mjs) is
+    // plain JavaScript, because an app loads it from node_modules where Node
+    // will not strip types. Same indentation as the rest.
+    {
+        name: 'doconext-nc-ui/overrides-mjs',
+        files: ['**/*.mjs', '**/*.d.mts'],
+        rules: {
+            '@stylistic/indent': ['error', 2, { SwitchCase: 1 }],
+            '@stylistic/no-tabs': 'off',
+            '@stylistic/arrow-parens': 'off',
+            '@stylistic/comma-dangle': 'off',
+            '@stylistic/max-statements-per-line': 'off',
+            '@stylistic/operator-linebreak': 'off',
+            '@stylistic/semi': 'off',
+            'perfectionist/sort-imports': 'off',
+            'perfectionist/sort-named-imports': 'off',
+            'import-extensions/extensions': 'off',
+            '@stylistic/implicit-arrow-linebreak': 'off',
+            'jsdoc/require-jsdoc': 'off',
+            'jsdoc/require-param': 'off',
+            'jsdoc/require-param-description': 'off',
+            'jsdoc/tag-lines': 'off',
+            'jsdoc/multiline-blocks': 'off',
+            curly: 'off',
+            'no-console': 'warn',
         },
     },
 

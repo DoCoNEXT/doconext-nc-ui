@@ -12,7 +12,18 @@
   "exports": {
     ".": "./src/index.ts",
     "./styles": "./src/styles/index.scss",
-    "./navigation-rail.css": "./src/styles/navigation-rail.css"
+    "./navigation-rail.css": "./src/styles/navigation-rail.css",
+    "./vite": {
+      "types": "./src/vite/manuals.d.mts",
+      "default": "./src/vite/manuals.mjs"
+    },
+    "./testing": {
+      "types": "./src/testing/help.d.mts",
+      "default": "./src/testing/help.mjs"
+    },
+    "./help-virtual": {
+      "types": "./src/help/virtual.d.ts"
+    }
   },
   "files": [
     "src",
@@ -36,6 +47,7 @@
     "@nextcloud/eslint-config": "^9.0.1",
     "@nextcloud/stylelint-config": "^3.2.2",
     "@nextcloud/vue": "~9.11.0",
+    "@types/markdown-it": "^14.2.0",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/test-utils": "^2.5.1",
     "@vue/tsconfig": "^0.8.1",
@@ -50,5 +62,8 @@
   "engines": {
     "node": "^24",
     "npm": ">=11"
+  },
+  "dependencies": {
+    "markdown-it": "^15.0.3"
   }
 }
