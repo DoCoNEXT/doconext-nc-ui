@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-11-26
 
 - Help: an app's manuals, written for Nextcloud Collectives, shown inside the
   app. The `dcnManuals` Vite plugin (`@doconext/nc-ui/vite`) compiles them
